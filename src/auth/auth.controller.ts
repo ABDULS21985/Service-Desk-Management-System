@@ -19,7 +19,7 @@ export class AuthController {
       summary: 'Example login payload',
       description: 'A standard example of a login payload',
       value: {
-        username: 'john_doe',
+        username: 'Admin',
         password: 'strongPassword123',
       },
     },
@@ -37,9 +37,9 @@ export class AuthController {
       summary: 'Example register payload',
       description: 'A standard example of a register payload',
       value: {
-        username: 'john_doe',
+        username: 'Admin',
         password: 'strongPassword123',
-        email: 'john_doe@example.com',
+        email: 'john_doe2@example.com',
         role: 'user',
       },
     },
