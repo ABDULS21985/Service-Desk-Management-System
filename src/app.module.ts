@@ -13,6 +13,7 @@ import { PermissionsModule } from './permissions/permissions.module';
 import { SlaModule } from './sla/sla.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { FeedbackModule } from './feedback/feedback.module';
+import { MailerModule } from './mailer/mailer.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { FeedbackModule } from './feedback/feedback.module';
     SlaModule,
     DashboardModule,
     FeedbackModule,
+    MailerModule,
   ],
 })
 export class AppModule {}

@@ -1,16 +1,20 @@
-import { Controller, Get, Post, Param, Delete, Body, Put, Patch, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Param, Delete, Body, Put, Patch, UseGuards, Request } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
 import { TicketsService } from './tickets.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
+import { AuthService } from '../auth/auth.service';
 
 @ApiTags('tickets')
 @Controller('tickets')
 @UseGuards(RolesGuard)
 export class TicketsController {
-  constructor(private readonly ticketsService: TicketsService) {}
+  constructor(
+    private readonly ticketsService: TicketsService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Get()
   @Roles('admin', 'staff')
@@ -98,7 +102,6 @@ export class TicketsController {
   }
 
   @Post()
-  @Roles('admin', 'staff', 'client')
   @ApiOperation({ summary: 'Create a new ticket' })
   @ApiBody({
     type: CreateTicketDto,
@@ -111,7 +114,26 @@ export class TicketsController {
     },
   })
   @ApiResponse({ status: 201, description: 'The ticket has been successfully created.' })
-  create(@Body() createTicketDto: CreateTicketDto) {
+  async create(@Request() req, @Body() createTicketDto: CreateTicketDto) {
+    let userId = createTicketDto.userId;
+
+    // If the user is not authenticated, register them as a guest user
+    if (!req.user) {
+      const guestEmail = `${Date.now()}@guest.com`;
+      const guestUser = await this.authService.register({
+        username: `guest_${Date.now()}`,
+        password: 'defaultPassword', // I will handle password more securely in the future
+        email: guestEmail,
+        role: 'client',
+      });
+
+      // Send the default password to the user's email
+      await this.authService.sendDefaultPasswordEmail(guestUser.email, 'defaultPassword');
+
+      userId = guestUser.id;
+    }
+
+    createTicketDto.userId = userId;
     return this.ticketsService.createTicket(createTicketDto);
   }
 

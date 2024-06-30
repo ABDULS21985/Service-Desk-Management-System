@@ -6,8 +6,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('CBN Service Desk Management System')
-    .setDescription('API documentation for the CBN Service Desk Management System')
+    .setTitle('Enterprise Service Desk Management Solution API')
+    .setDescription('API documentation for the Enterprise Service Desk Management Solution')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
