@@ -8,6 +8,11 @@ import { AuthModule } from './auth/auth.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { ReportsModule } from './reports/reports.module';
 import { typeOrmConfig } from './config/typeorm.config';
+import { RolesModule } from './roles/roles.module';
+import { PermissionsModule } from './permissions/permissions.module';
+import { SlaModule } from './sla/sla.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { FeedbackModule } from './feedback/feedback.module';
 
 @Module({
   imports: [
@@ -25,6 +30,11 @@ import { typeOrmConfig } from './config/typeorm.config';
     AuthModule,
     NotificationsModule,
     ReportsModule,
+    RolesModule,
+    PermissionsModule,
+    SlaModule,
+    DashboardModule,
+    FeedbackModule,
   ],
 })
 export class AppModule {}

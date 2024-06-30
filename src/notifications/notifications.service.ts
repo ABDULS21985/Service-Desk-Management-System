@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Notification } from './entities/notification.entity';
 import { CreateNotificationDto } from './dto/create-notification.dto';
+import { UpdateNotificationDto } from './dto/update-notification.dto';
 
 @Injectable()
 export class NotificationsService {
@@ -20,10 +21,11 @@ export class NotificationsService {
   }
 
   async create(createNotificationDto: CreateNotificationDto): Promise<Notification> {
-    const notification = new Notification();
-    notification.user = { id: createNotificationDto.userId } as any;
-    notification.message = createNotificationDto.message;
-    notification.status = 'unread';
+    const notification = this.notificationRepository.create({
+      ...createNotificationDto,
+      status: 'unread',
+      createdAt: new Date(),
+    });
     return this.notificationRepository.save(notification);
   }
 
@@ -37,7 +39,7 @@ export class NotificationsService {
     await this.notificationRepository.delete(id);
   }
 
-  async updateNotification(id: number, updateNotificationDto: Partial<Notification>): Promise<Notification> {
+  async updateNotification(id: number, updateNotificationDto: UpdateNotificationDto): Promise<Notification> {
     await this.notificationRepository.update(id, updateNotificationDto);
     return this.findOne(id);
   }
