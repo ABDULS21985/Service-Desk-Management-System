@@ -51,4 +51,36 @@ export class TicketsService {
     ticket.assignedTo = { id: assignedToId } as User;
     return this.ticketRepository.save(ticket);
   }
+
+  async findAllActiveTickets(): Promise<Ticket[]> {
+    return this.ticketRepository.find({ where: { status: 'open' }, relations: ['user', 'assignedTo'] });
+  }
+
+  async findMyActiveTickets(userId: number): Promise<Ticket[]> {
+    return this.ticketRepository.find({ where: { user: { id: userId }, status: 'open' }, relations: ['user', 'assignedTo'] });
+  }
+
+  async findMyActivePaidTickets(userId: number): Promise<Ticket[]> {
+    return this.ticketRepository.find({ where: { user: { id: userId }, status: 'open', isPaid: true }, relations: ['user', 'assignedTo'] });
+  }
+
+  async findMyClosedTickets(userId: number): Promise<Ticket[]> {
+    return this.ticketRepository.find({ where: { user: { id: userId }, status: 'closed' }, relations: ['user', 'assignedTo'] });
+  }
+
+  async findMyAssignedTickets(userId: number): Promise<Ticket[]> {
+    return this.ticketRepository.find({ where: { assignedTo: { id: userId } }, relations: ['user', 'assignedTo'] });
+  }
+
+  async findAllUnassignedTickets(): Promise<Ticket[]> {
+    return this.ticketRepository.find({ where: { assignedTo: null }, relations: ['user'] });
+  }
+
+  async findAllPaidTickets(): Promise<Ticket[]> {
+    return this.ticketRepository.find({ where: { isPaid: true }, relations: ['user', 'assignedTo'] });
+  }
+
+  async findAllClosedTickets(): Promise<Ticket[]> {
+    return this.ticketRepository.find({ where: { status: 'closed' }, relations: ['user', 'assignedTo'] });
+  }
 }

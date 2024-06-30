@@ -16,6 +16,66 @@ export class TicketsController {
     return this.ticketsService.findAll();
   }
 
+  @Get('active')
+  @ApiOperation({ summary: 'Get all active tickets' })
+  @ApiResponse({ status: 200, description: 'Return all active tickets.' })
+  findAllActive() {
+    return this.ticketsService.findAllActiveTickets();
+  }
+
+  @Get('my-active/:userId')
+  @ApiOperation({ summary: 'Get my active tickets' })
+  @ApiParam({ name: 'userId', type: 'number', description: 'ID of the user' })
+  @ApiResponse({ status: 200, description: 'Return all active tickets for a user.' })
+  findMyActive(@Param('userId') userId: number) {
+    return this.ticketsService.findMyActiveTickets(userId);
+  }
+
+  @Get('my-active-paid/:userId')
+  @ApiOperation({ summary: 'Get my active paid tickets' })
+  @ApiParam({ name: 'userId', type: 'number', description: 'ID of the user' })
+  @ApiResponse({ status: 200, description: 'Return all active paid tickets for a user.' })
+  findMyActivePaid(@Param('userId') userId: number) {
+    return this.ticketsService.findMyActivePaidTickets(userId);
+  }
+
+  @Get('my-closed/:userId')
+  @ApiOperation({ summary: 'Get my closed tickets' })
+  @ApiParam({ name: 'userId', type: 'number', description: 'ID of the user' })
+  @ApiResponse({ status: 200, description: 'Return all closed tickets for a user.' })
+  findMyClosed(@Param('userId') userId: number) {
+    return this.ticketsService.findMyClosedTickets(userId);
+  }
+
+  @Get('my-assigned/:userId')
+  @ApiOperation({ summary: 'Get my assigned tickets' })
+  @ApiParam({ name: 'userId', type: 'number', description: 'ID of the user' })
+  @ApiResponse({ status: 200, description: 'Return all assigned tickets for a user.' })
+  findMyAssigned(@Param('userId') userId: number) {
+    return this.ticketsService.findMyAssignedTickets(userId);
+  }
+
+  @Get('unassigned')
+  @ApiOperation({ summary: 'Get all unassigned tickets' })
+  @ApiResponse({ status: 200, description: 'Return all unassigned tickets.' })
+  findAllUnassigned() {
+    return this.ticketsService.findAllUnassignedTickets();
+  }
+
+  @Get('paid')
+  @ApiOperation({ summary: 'Get all paid tickets' })
+  @ApiResponse({ status: 200, description: 'Return all paid tickets.' })
+  findAllPaid() {
+    return this.ticketsService.findAllPaidTickets();
+  }
+
+  @Get('closed')
+  @ApiOperation({ summary: 'Get all closed tickets' })
+  @ApiResponse({ status: 200, description: 'Return all closed tickets.' })
+  findAllClosed() {
+    return this.ticketsService.findAllClosedTickets();
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get a ticket by ID' })
   @ApiParam({ name: 'id', type: 'number', description: 'ID of the ticket' })
@@ -32,7 +92,7 @@ export class TicketsController {
       example1: {
         summary: 'High priority ticket',
         description: 'Create a high priority ticket',
-        value: { title: 'Critical Issue', description: 'System down', priority: 'high', userId: 1, status: 'open' },
+        value: { title: 'Critical Issue', description: 'System down', priority: 'high', userId: 1, status: 'open', isPaid: false },
       },
     },
   })

@@ -1,18 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateTicketDto {
-  @ApiProperty({ example: 'Login Issue' })
+  @ApiProperty()
   title: string;
 
-  @ApiProperty({ example: 'Unable to login with correct credentials' })
+  @ApiProperty()
   description: string;
 
-  @ApiProperty({ example: 'open' })
-  status: string;
+  @ApiProperty()
+  priority: string; // 'low', 'medium', 'high'
 
-  @ApiProperty({ example: 'high' })
-  priority: string;
+  @ApiProperty()
+  status: string; // 'open', 'in-progress', 'closed'
 
-  @ApiProperty({ example: 1 })
+  @ApiProperty()
+  isPaid: boolean;
+
+  @ApiProperty()
   userId: number;
 }

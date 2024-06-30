@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
 @Entity()
@@ -18,10 +18,15 @@ export class Ticket {
   @Column()
   priority: string;
 
-  @ManyToOne(() => User, user => user.tickets)
-  user: User;
+  @Column({ default: false })
+  isPaid: boolean;
 
   @ManyToOne(() => User)
+  @JoinColumn({ name: 'userId' })
+  user: User;
+
+  @ManyToOne(() => User, { nullable: true })
+  @JoinColumn({ name: 'assignedToId' })
   assignedTo: User;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
