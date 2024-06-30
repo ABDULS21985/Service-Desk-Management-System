@@ -16,8 +16,11 @@ export class User {
   email: string;
 
   @Column()
-  role: string;
+  role: string; // 'client', 'staff', 'admin'
 
   @OneToMany(() => Ticket, ticket => ticket.user)
   tickets: Ticket[];
+
+  @OneToMany(() => Ticket, ticket => ticket.assignedTo)
+  assignedTickets: Ticket[];
 }

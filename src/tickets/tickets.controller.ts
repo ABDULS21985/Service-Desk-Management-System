@@ -1,15 +1,19 @@
-import { Controller, Get, Post, Param, Delete, Body, Put, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Param, Delete, Body, Put, Patch, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
 import { TicketsService } from './tickets.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/roles.decorator';
 
 @ApiTags('tickets')
 @Controller('tickets')
+@UseGuards(RolesGuard)
 export class TicketsController {
   constructor(private readonly ticketsService: TicketsService) {}
 
   @Get()
+  @Roles('admin', 'staff')
   @ApiOperation({ summary: 'Get all tickets' })
   @ApiResponse({ status: 200, description: 'Return all tickets.' })
   findAll() {
@@ -17,6 +21,7 @@ export class TicketsController {
   }
 
   @Get('active')
+  @Roles('admin', 'staff')
   @ApiOperation({ summary: 'Get all active tickets' })
   @ApiResponse({ status: 200, description: 'Return all active tickets.' })
   findAllActive() {
@@ -24,6 +29,7 @@ export class TicketsController {
   }
 
   @Get('my-active/:userId')
+  @Roles('client', 'staff', 'admin')
   @ApiOperation({ summary: 'Get my active tickets' })
   @ApiParam({ name: 'userId', type: 'number', description: 'ID of the user' })
   @ApiResponse({ status: 200, description: 'Return all active tickets for a user.' })
@@ -32,6 +38,7 @@ export class TicketsController {
   }
 
   @Get('my-active-paid/:userId')
+  @Roles('client', 'staff', 'admin')
   @ApiOperation({ summary: 'Get my active paid tickets' })
   @ApiParam({ name: 'userId', type: 'number', description: 'ID of the user' })
   @ApiResponse({ status: 200, description: 'Return all active paid tickets for a user.' })
@@ -40,6 +47,7 @@ export class TicketsController {
   }
 
   @Get('my-closed/:userId')
+  @Roles('client', 'staff', 'admin')
   @ApiOperation({ summary: 'Get my closed tickets' })
   @ApiParam({ name: 'userId', type: 'number', description: 'ID of the user' })
   @ApiResponse({ status: 200, description: 'Return all closed tickets for a user.' })
@@ -48,6 +56,7 @@ export class TicketsController {
   }
 
   @Get('my-assigned/:userId')
+  @Roles('staff', 'admin')
   @ApiOperation({ summary: 'Get my assigned tickets' })
   @ApiParam({ name: 'userId', type: 'number', description: 'ID of the user' })
   @ApiResponse({ status: 200, description: 'Return all assigned tickets for a user.' })
@@ -56,6 +65,7 @@ export class TicketsController {
   }
 
   @Get('unassigned')
+  @Roles('staff', 'admin')
   @ApiOperation({ summary: 'Get all unassigned tickets' })
   @ApiResponse({ status: 200, description: 'Return all unassigned tickets.' })
   findAllUnassigned() {
@@ -63,6 +73,7 @@ export class TicketsController {
   }
 
   @Get('paid')
+  @Roles('admin', 'staff')
   @ApiOperation({ summary: 'Get all paid tickets' })
   @ApiResponse({ status: 200, description: 'Return all paid tickets.' })
   findAllPaid() {
@@ -70,6 +81,7 @@ export class TicketsController {
   }
 
   @Get('closed')
+  @Roles('admin', 'staff')
   @ApiOperation({ summary: 'Get all closed tickets' })
   @ApiResponse({ status: 200, description: 'Return all closed tickets.' })
   findAllClosed() {
@@ -77,6 +89,7 @@ export class TicketsController {
   }
 
   @Get(':id')
+  @Roles('admin', 'staff')
   @ApiOperation({ summary: 'Get a ticket by ID' })
   @ApiParam({ name: 'id', type: 'number', description: 'ID of the ticket' })
   @ApiResponse({ status: 200, description: 'Return a ticket by ID.' })
@@ -85,6 +98,7 @@ export class TicketsController {
   }
 
   @Post()
+  @Roles('admin', 'staff', 'client')
   @ApiOperation({ summary: 'Create a new ticket' })
   @ApiBody({
     type: CreateTicketDto,
@@ -102,6 +116,7 @@ export class TicketsController {
   }
 
   @Put(':id')
+  @Roles('admin', 'staff')
   @ApiOperation({ summary: 'Update a ticket by ID' })
   @ApiParam({ name: 'id', type: 'number', description: 'ID of the ticket' })
   @ApiBody({
@@ -120,6 +135,7 @@ export class TicketsController {
   }
 
   @Delete(':id')
+  @Roles('admin')
   @ApiOperation({ summary: 'Delete a ticket by ID' })
   @ApiParam({ name: 'id', type: 'number', description: 'ID of the ticket' })
   @ApiResponse({ status: 200, description: 'The ticket has been successfully deleted.' })
@@ -128,6 +144,7 @@ export class TicketsController {
   }
 
   @Patch(':id/status')
+  @Roles('admin', 'staff')
   @ApiOperation({ summary: 'Update the status of a ticket' })
   @ApiParam({ name: 'id', type: 'number', description: 'ID of the ticket' })
   @ApiBody({
@@ -144,6 +161,7 @@ export class TicketsController {
   }
 
   @Patch(':id/assign')
+  @Roles('admin', 'staff')
   @ApiOperation({ summary: 'Assign a ticket to a user' })
   @ApiParam({ name: 'id', type: 'number', description: 'ID of the ticket' })
   @ApiBody({
